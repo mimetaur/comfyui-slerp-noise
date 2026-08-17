@@ -230,7 +230,13 @@ class BrownianBridgeNoise:
                 "frame_index": ("INT", {"default": 0, "min": 0, "max": 999999}),
                 "total_frames": ("INT", {"default": 240, "min": 2, "max": 999999}),
                 "wander_scale": ("FLOAT", {"default": 0.15, "min": 0.0, "max": 1.0, "step": 0.01}),
-                "num_keyframes": ("INT", {"default": 10, "min": 2, "max": 50}),
+                # No structural ceiling: keyframe_seeds is a list of scalar
+                # ints (torch.randint per keyframe), and only the two
+                # bounding keyframes ever get a full noise tensor generated.
+                # 1000 is a policy bound, not an implementation one — an
+                # order of magnitude above the 90 in production use, chosen
+                # to keep the widget sane rather than to protect anything.
+                "num_keyframes": ("INT", {"default": 10, "min": 2, "max": 1000}),
                 "perturbation_seed": ("INT", {"default": 12345, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
                 "width": ("INT", {"default": 1080, "min": 64, "max": 8192, "step": 8}),
                 "height": ("INT", {"default": 1920, "min": 64, "max": 8192, "step": 8}),
